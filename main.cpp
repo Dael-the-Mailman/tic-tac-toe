@@ -7,6 +7,7 @@ class GameState
 public:
     GameState()
     {
+        board.resize(3, vector<char>(3));
         for (int row = 0; row < 3; row++)
         {
             for (int col = 0; col < 3; col++)
@@ -130,13 +131,14 @@ public:
         return xToMove;
     }
 
-    char *getBoard()
+    vector<vector<char> > getBoard()
     {
-        return reinterpret_cast<char *>(board);
+        return board;
     }
 
 private:
-    char board[3][3];
+    // const int dim = 3;
+    vector<vector<char> > board;
     bool xToMove;
 };
 
@@ -158,7 +160,21 @@ private:
 
 int main()
 {
+    // enum class Mode
+    // {
+    //     pvp,
+    //     pvai,
+    //     aivai
+    // };
+
+    // enum class AI
+    // {
+    //     mini,
+    //     mcts
+    // };
+
     GameState gs;
+    // Mode mode = Mode::pvp;
     while (!gs.isDone())
     {
         if (gs.isXTurn())
