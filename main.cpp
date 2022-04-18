@@ -130,9 +130,30 @@ public:
         return xToMove;
     }
 
+    char *getBoard()
+    {
+        return reinterpret_cast<char *>(board);
+    }
+
 private:
     char board[3][3];
     bool xToMove;
+};
+
+class Minimax
+{
+public:
+    Minimax();
+
+private:
+};
+
+class MCTS
+{
+public:
+    MCTS();
+
+private:
 };
 
 int main()
