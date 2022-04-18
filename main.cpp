@@ -131,14 +131,14 @@ public:
         return xToMove;
     }
 
-    vector<vector<char> > getBoard()
+    vector<vector<char>> getBoard()
     {
         return board;
     }
 
 private:
     // const int dim = 3;
-    vector<vector<char> > board;
+    vector<vector<char>> board;
     bool xToMove;
 };
 
@@ -160,38 +160,58 @@ private:
 
 int main()
 {
-    // enum class Mode
-    // {
-    //     pvp,
-    //     pvai,
-    //     aivai
-    // };
+    enum class Mode
+    {
+        pvp,
+        pvai,
+        aivai
+    };
 
-    // enum class AI
-    // {
-    //     mini,
-    //     mcts
-    // };
+    enum class AI
+    {
+        mini,
+        mcts
+    };
 
     GameState gs;
-    // Mode mode = Mode::pvp;
+    Mode mode;
+    int choice;
+
+    cout
+        << "Choose which mode to play: \n"
+        << "   0 - Player vs Player\n"
+        << "   1 - Player vs AI\n"
+        << "   2 - AI vs AI\n";
+    cin >> choice;
+    mode = (Mode)choice;
     while (!gs.isDone())
     {
-        if (gs.isXTurn())
+        switch (mode)
         {
-            cout << "X to ";
-        }
-        else
-        {
-            cout << "O to ";
-        }
+        case Mode::pvp:
+            if (gs.isXTurn())
+            {
+                cout << "X to ";
+            }
+            else
+            {
+                cout << "O to ";
+            }
 
-        cout << "Move (Format: row col)\n";
-        int r, c;
-        cin >> r >> c;
-        gs.move(r, c);
-        gs.display();
-        cout << "\n";
+            cout << "Move (Format: row col)\n";
+            int r, c;
+            cin >> r >> c;
+            gs.move(r, c);
+            gs.display();
+            cout << "\n";
+            break;
+        case Mode::pvai:
+            cout << "Dum Dum\n";
+            break;
+        case Mode::aivai:
+            cout << "He he\n";
+            break;
+        }
     }
     return 0;
 }
