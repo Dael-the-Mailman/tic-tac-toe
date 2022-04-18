@@ -67,20 +67,8 @@ public:
         return true;
     }
 
-    void move()
+    void move(int r, int c)
     {
-        if (xToMove)
-        {
-            cout << "X to ";
-        }
-        else
-        {
-            cout << "O to ";
-        }
-
-        cout << "Move (Format: row col)\n";
-        int r, c;
-        cin >> r >> c;
         try
         {
             if (board[r - 1][c - 1] == '-')
@@ -137,6 +125,11 @@ public:
         }
     }
 
+    bool isXTurn()
+    {
+        return xToMove;
+    }
+
 private:
     char board[3][3];
     bool xToMove;
@@ -147,8 +140,19 @@ int main()
     GameState gs;
     while (!gs.isDone())
     {
+        if (gs.isXTurn())
+        {
+            cout << "X to ";
+        }
+        else
+        {
+            cout << "O to ";
+        }
 
-        gs.move();
+        cout << "Move (Format: row col)\n";
+        int r, c;
+        cin >> r >> c;
+        gs.move(r, c);
         gs.display();
         cout << "\n";
     }
