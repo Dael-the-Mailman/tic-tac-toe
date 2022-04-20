@@ -18,39 +18,35 @@ public:
         xToMove = true;
     }
 
-    bool isDone()
-    {
+    char check(vector<vector<char >> gs){
         // Check if player wins
-        if (board[0][0] != '-')
+        if (gs[0][0] != '-')
         {
-            bool vert = (board[0][0] == board[1][0]) && (board[0][0] == board[2][0]);
-            bool hort = (board[0][0] == board[0][1]) && (board[0][0] == board[0][2]);
+            bool vert = (gs[0][0] == gs[1][0]) && (gs[0][0] == gs[2][0]);
+            bool hort = (gs[0][0] == gs[0][1]) && (gs[0][0] == gs[0][2]);
             if (vert || hort)
             {
-                cout << "Player " << board[0][0] << " Wins!\n";
-                return true;
+                return gs[0][0];
             }
         }
-        if (board[1][1] != '-')
+        if (gs[1][1] != '-')
         {
-            bool diag1 = (board[1][1] == board[0][0]) && (board[1][1] == board[2][2]);
-            bool diag2 = (board[1][1] == board[0][2]) && (board[1][1] == board[2][0]);
-            bool vert = (board[1][1] == board[0][1]) && (board[1][1] == board[2][1]);
-            bool hort = (board[1][1] == board[1][0]) && (board[1][1] == board[1][2]);
+            bool diag1 = (gs[1][1] == gs[0][0]) && (gs[1][1] == gs[2][2]);
+            bool diag2 = (gs[1][1] == gs[0][2]) && (gs[1][1] == gs[2][0]);
+            bool vert = (gs[1][1] == gs[0][1]) && (gs[1][1] == gs[2][1]);
+            bool hort = (gs[1][1] == gs[1][0]) && (gs[1][1] == gs[1][2]);
             if (diag1 || diag2 || vert || hort)
             {
-                cout << "Player " << board[1][1] << " Wins!\n";
-                return true;
+                return gs[1][1];
             }
         }
-        if (board[2][2] != '-')
+        if (gs[2][2] != '-')
         {
-            bool vert = (board[2][2] == board[0][2]) && (board[2][2] == board[1][2]);
-            bool hort = (board[2][2] == board[2][1]) && (board[2][2] == board[2][0]);
+            bool vert = (gs[2][2] == gs[0][2]) && (gs[2][2] == gs[1][2]);
+            bool hort = (gs[2][2] == gs[2][1]) && (gs[2][2] == gs[2][0]);
             if (vert || hort)
             {
-                cout << "Player " << board[2][2] << " Wins!\n";
-                return true;
+                return gs[2][2];
             }
         }
         // Check if board's filled
@@ -58,13 +54,33 @@ public:
         {
             for (int col = 0; col < 3; col++)
             {
-                if (board[row][col] == '-')
+                if (gs[row][col] == '-')
                 {
-                    return false;
+                    return '-';
                 };
             }
         }
-        cout << "Draw!\n";
+        
+        return 'd';
+    }
+
+    bool isDone()
+    {
+        char result = check(board);
+        if(result == '-')
+            return false;
+        
+        switch(result){
+            case 'x':
+                cout << "Player X Wins!\n";
+                break;
+            case 'o':
+                cout << "Player O Wins!\n";
+                break;
+            case 'd':
+                cout << "Draw!\n";
+                break;
+        }
         return true;
     }
 
@@ -131,14 +147,14 @@ public:
         return xToMove;
     }
 
-    vector<vector<char>> getBoard()
+    vector<vector<char> > getBoard()
     {
         return board;
     }
 
 private:
     // const int dim = 3;
-    vector<vector<char>> board;
+    vector<vector<char> > board;
     bool xToMove;
 };
 
@@ -147,7 +163,12 @@ class Minimax
 public:
     Minimax();
 
+    vector<int> move(vector<vector<char> > boardState, bool isTurn){
+        return vector<int>();
+    }
+
 private:
+
 };
 
 class MCTS
