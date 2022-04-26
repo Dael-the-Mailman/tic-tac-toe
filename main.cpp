@@ -165,58 +165,26 @@ private:
 
 int main()
 {
-    enum class Mode
-    {
-        pvp,
-        pvai,
-        aivai
-    };
-
-    enum class AI
-    {
-        mini,
-        mcts
-    };
-
     GameState gs;
-    Mode mode;
     int choice;
 
-    cout
-        << "Choose which mode to play: \n"
-        << "   0 - Player vs Player\n"
-        << "   1 - Player vs AI\n"
-        << "   2 - AI vs AI\n";
-    cin >> choice;
-    mode = (Mode)choice;
     while (!gs.isDone())
     {
-        switch (mode)
+        if (gs.isXTurn())
         {
-        case Mode::pvp:
-            if (gs.isXTurn())
-            {
-                cout << "X to ";
-            }
-            else
-            {
-                cout << "O to ";
-            }
-
-            cout << "Move (Format: row col)\n";
-            int r, c;
-            cin >> r >> c;
-            gs.move(r, c);
-            gs.display();
-            cout << "\n";
-            break;
-        case Mode::pvai:
-            cout << "Dum Dum\n";
-            break;
-        case Mode::aivai:
-            cout << "He he\n";
-            break;
+            cout << "X to ";
         }
+        else
+        {
+            cout << "O to ";
+        }
+
+        cout << "Move (Format: row col)\n";
+        int r, c;
+        cin >> r >> c;
+        gs.move(r, c);
+        gs.display();
+        cout << "\n";
     }
     return 0;
 }
