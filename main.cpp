@@ -2,6 +2,11 @@
 
 using namespace std;
 
+struct Move{
+    int x;
+    int y;
+};
+
 class GameState
 {
 public:
@@ -18,7 +23,7 @@ public:
         xToMove = true;
     }
 
-    char check(vector<vector<char >> gs){
+    char check(vector<vector<char> > gs){
         // Check if player wins
         if (gs[0][0] != '-')
         {
@@ -156,31 +161,6 @@ private:
     // const int dim = 3;
     vector<vector<char> > board;
     bool xToMove;
-};
-
-class Minimax
-{
-public:
-    Minimax();
-
-    vector<int> move(vector<vector<char> > boardState, bool isTurn){
-        return vector<int>();
-    }
-
-private:
-
-};
-
-class MCTS
-{
-public:
-    MCTS();
-
-    vector<int> move(vector<vector<char> > boardState, bool isTurn){
-        return vector<int>();
-    }
-
-private:
 };
 
 int main()
