@@ -176,6 +176,10 @@ class MCTS
 public:
     MCTS();
 
+    vector<int> move(vector<vector<char> > boardState, bool isTurn){
+        return vector<int>();
+    }
+
 private:
 };
 
