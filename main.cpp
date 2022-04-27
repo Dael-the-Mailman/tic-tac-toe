@@ -166,10 +166,11 @@ private:
 class MiniMax{
 public:
     MiniMax(){
-
+        iterations = 0;
     }
 
     Move getBestMove(vector<vector<char> > &board, bool isMaximizing){
+        iterations = 0;
         int bestScore = (isMaximizing) ? numeric_limits<int>::min() : numeric_limits<int>::max();
         Move optimal;
         for(int row = 0; row < 3; row++){
@@ -199,6 +200,10 @@ public:
         return optimal;
     }
 
+    int getIterations(){
+        return iterations;
+    }
+
 private:
     int evaluate(vector<vector<char> > &board, bool isMaximizing){
         if(check(board) == 'x'){
@@ -209,6 +214,7 @@ private:
             return 0;
         }
         
+        iterations++;
         int bestScore = (isMaximizing) ? numeric_limits<int>::min() : numeric_limits<int>::max();
         
         for(int row = 0; row < 3; row++){
@@ -233,8 +239,10 @@ private:
                 }
             }
         }
+        
         return bestScore;
     }
+    int iterations;
 };
 
 int main()
@@ -268,7 +276,7 @@ int main()
             bool turn = gs.isXTurn();
             Move m = mm.getBestMove(board, turn);
             gs.move(m.row, m.col);
-            
+            cout << mm.getIterations() << " iterations checked\n";
         }
         else
         {
