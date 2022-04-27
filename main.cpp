@@ -163,76 +163,85 @@ private:
     bool xToMove;
 };
 
-int evaluate(vector<vector<char> > &board, bool isMaximizing){
-    if(check(board) == 'x'){
-        return 1;
-    } else if (check(board) == 'o'){
-        return -1;
-    } else if (check(board) == 'd'){
-        return 0;
-    }
-    
-    int bestScore = (isMaximizing) ? numeric_limits<int>::min() : numeric_limits<int>::max();
-    
-    for(int row = 0; row < 3; row++){
-        for(int col = 0; col < 3; col++){
-            if(board[row][col] == '-'){
-                if(isMaximizing){
-                    board[row][col] = 'x';
-                } else {
-                    board[row][col] = 'o';
-                }
-                int score = evaluate(board, !isMaximizing);
-                board[row][col] = '-';
-                if(isMaximizing){
-                    if(score > bestScore){
-                        bestScore = score;
-                    }
-                } else {
-                    if(score < bestScore){
-                        bestScore = score;
-                    }
-                }
-            }
-        }
-    }
-    return bestScore;
-}
+class MiniMax{
+public:
+    MiniMax(){
 
-Move bestMove(vector<vector<char> > &board, bool isMaximizing){
-    int bestScore = (isMaximizing) ? numeric_limits<int>::min() : numeric_limits<int>::max();
-    Move optimal;
-    for(int row = 0; row < 3; row++){
-        for(int col = 0; col < 3; col++){
-            if(board[row][col] == '-'){
-                if(isMaximizing){
-                    board[row][col] = 'x';
-                } else {
-                    board[row][col] = 'o';
-                }
-                int score = evaluate(board, !isMaximizing);
-                board[row][col] = '-';
-                if(isMaximizing){
-                    if(score > bestScore){
-                        bestScore = score;
-                        optimal = {row + 1, col + 1};
+    }
+
+    Move getBestMove(vector<vector<char> > &board, bool isMaximizing){
+        int bestScore = (isMaximizing) ? numeric_limits<int>::min() : numeric_limits<int>::max();
+        Move optimal;
+        for(int row = 0; row < 3; row++){
+            for(int col = 0; col < 3; col++){
+                if(board[row][col] == '-'){
+                    if(isMaximizing){
+                        board[row][col] = 'x';
+                    } else {
+                        board[row][col] = 'o';
                     }
-                } else {
-                    if(score < bestScore){
-                        bestScore = score;
-                        optimal = {row + 1, col + 1};
+                    int score = evaluate(board, !isMaximizing);
+                    board[row][col] = '-';
+                    if(isMaximizing){
+                        if(score > bestScore){
+                            bestScore = score;
+                            optimal = {row + 1, col + 1};
+                        }
+                    } else {
+                        if(score < bestScore){
+                            bestScore = score;
+                            optimal = {row + 1, col + 1};
+                        }
                     }
                 }
             }
         }
+        return optimal;
     }
-    return optimal;
-}
+
+private:
+    int evaluate(vector<vector<char> > &board, bool isMaximizing){
+        if(check(board) == 'x'){
+            return 1;
+        } else if (check(board) == 'o'){
+            return -1;
+        } else if (check(board) == 'd'){
+            return 0;
+        }
+        
+        int bestScore = (isMaximizing) ? numeric_limits<int>::min() : numeric_limits<int>::max();
+        
+        for(int row = 0; row < 3; row++){
+            for(int col = 0; col < 3; col++){
+                if(board[row][col] == '-'){
+                    if(isMaximizing){
+                        board[row][col] = 'x';
+                    } else {
+                        board[row][col] = 'o';
+                    }
+                    int score = evaluate(board, !isMaximizing);
+                    board[row][col] = '-';
+                    if(isMaximizing){
+                        if(score > bestScore){
+                            bestScore = score;
+                        }
+                    } else {
+                        if(score < bestScore){
+                            bestScore = score;
+                        }
+                    }
+                }
+            }
+        }
+        return bestScore;
+    }
+};
 
 int main()
 {
     GameState gs;
     int choice;
+    MiniMax mm;
 
     while (!gs.isDone())
     {
@@ -252,18 +261,18 @@ int main()
         // gs.display();
         // cout << "\n";
 
-        if (gs.isXTurn())
+        if (!gs.isXTurn())
         {
-            cout << "X to Move\n";
+            cout << "O to Move\n";
             vector<vector<char> > board = gs.getBoard();
             bool turn = gs.isXTurn();
-            Move m = bestMove(board, turn);
+            Move m = mm.getBestMove(board, turn);
             gs.move(m.row, m.col);
             
         }
         else
         {
-            cout << "O to Move (Format: row col)\n";
+            cout << "X to Move (Format: row col)\n";
             int r, c;
             cin >> r >> c;
             gs.move(r, c);
