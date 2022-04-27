@@ -213,7 +213,7 @@ private:
         } else if (check(board) == 'd'){
             return 0;
         }
-        
+
         iterations++;
         int bestScore = (isMaximizing) ? numeric_limits<int>::min() : numeric_limits<int>::max();
         
@@ -243,6 +243,21 @@ private:
         return bestScore;
     }
     int iterations;
+};
+
+class MonteCarlo{
+public:
+    MonteCarlo(){
+
+    }
+
+    Move getBestMove(){
+        return {-1,-1};
+    }
+private:
+    int evaluation(){
+        return 1;
+    }
 };
 
 int main()
