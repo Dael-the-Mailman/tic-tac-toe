@@ -268,6 +268,18 @@ int main()
             cin >> r >> c;
             gs.move(r, c);
         }
+
+        // if(gs.isXTurn()){
+        //     cout << "X to Move\n";
+        // } else {
+        //     cout << "O to Move\n";
+        // }
+
+        // vector<vector<char> > board = gs.getBoard();
+        // bool turn = gs.isXTurn();
+        // Move m = bestMove(board, turn);
+        // gs.move(m.row, m.col);
+
         gs.display();
     }
     return 0;
