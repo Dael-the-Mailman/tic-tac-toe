@@ -284,9 +284,9 @@ int main()
         // gs.display();
         // cout << "\n";
 
-        if (!gs.isXTurn())
+        if (gs.isXTurn())
         {
-            cout << "O to Move\n";
+            cout << "X to Move\n";
             vector<vector<char> > board = gs.getBoard();
             bool turn = gs.isXTurn();
             Move m = mm.getBestMove(board, turn);
@@ -295,7 +295,7 @@ int main()
         }
         else
         {
-            cout << "X to Move (Format: row col)\n";
+            cout << "O to Move (Format: row col)\n";
             int r, c;
             cin >> r >> c;
             gs.move(r, c);
