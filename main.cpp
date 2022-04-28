@@ -261,7 +261,7 @@ public:
         return {-1,-1};
     }
 private:
-    int evaluation(){
+    int evaluate(){
         return 1;
     }
 };
@@ -271,6 +271,7 @@ int main()
     GameState gs;
     int choice;
     MiniMax mm;
+    MonteCarlo mc;
 
     while (!gs.isDone())
     {
