@@ -173,6 +173,8 @@ public:
         iterations = 0;
         int bestScore = (isMaximizing) ? numeric_limits<int>::min() : numeric_limits<int>::max();
         Move optimal;
+        int alpha = numeric_limits<int>::min();
+        int beta = numeric_limits<int>::max();
         for(int row = 0; row < 3; row++){
             for(int col = 0; col < 3; col++){
                 if(board[row][col] == '-'){
@@ -181,7 +183,7 @@ public:
                     } else {
                         board[row][col] = 'o';
                     }
-                    int score = evaluate(board, !isMaximizing);
+                    int score = evaluate(board, alpha, beta, !isMaximizing);
                     board[row][col] = '-';
                     if(isMaximizing){
                         if(score > bestScore){
@@ -205,7 +207,7 @@ public:
     }
 
 private:
-    int evaluate(vector<vector<char> > &board, bool isMaximizing){
+    int evaluate(vector<vector<char> > &board, int alpha, int beta, bool isMaximizing){
         if(check(board) == 'x'){
             return 1;
         } else if (check(board) == 'o'){
@@ -225,16 +227,20 @@ private:
                     } else {
                         board[row][col] = 'o';
                     }
-                    int score = evaluate(board, !isMaximizing);
+                    int score = evaluate(board, alpha, beta, !isMaximizing);
                     board[row][col] = '-';
                     if(isMaximizing){
-                        if(score > bestScore){
-                            bestScore = score;
-                        }
+                        bestScore = max(bestScore, score);
+                        if (score >= beta)
+                            return bestScore;
+                        if (score > alpha)
+                            alpha = score;
                     } else {
-                        if(score < bestScore){
-                            bestScore = score;
-                        }
+                        bestScore = min(bestScore, score);
+                        if (score <= alpha)
+                            return bestScore;
+                        if (score < beta)
+                            beta = score;
                     }
                 }
             }
