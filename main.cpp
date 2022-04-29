@@ -251,19 +251,80 @@ private:
     int iterations;
 };
 
-class MonteCarlo{
+class Node {
 public:
-    MonteCarlo(){
+    Node(vector<vector<char> > board){
+        this->board = board;
+        if((check(board) == 'x') || (check(board) == 'o') || (check(board) == 'd')){
+            terminal = true;
+        } else {
+            terminal = false;
+        }
+        visits = 0;
+        score = 0;
+    }
+
+    bool isTerminal(){
+        return terminal;
+    }
+
+    vector<vector<char> > getBoard(){
+        return board;
+    }
+
+    int getScore(){
+        return score;
+    }
+
+    int getVisits(){
+        return visits;
+    }
+
+    void setScore(int newScore){
+        score = newScore;
+    }
+
+    void setVisits(int newVisits){
+        visits = newVisits;
+    }
+
+private:
+    bool terminal;
+    vector<vector<char> > board;
+    int visits, score;
+}
+
+class GameTree {
+public:
+    GameTree(){
 
     }
 
+    void addChildren(Node& parent, list<Node>& children){
+        adjList.insert({parent, children});
+    }
+
+
+private:
+    map<Node, list<Node>> adjList;
+}
+
+class MonteCarlo{
+public:
+    MonteCarlo(){
+        iterations = 0;
+    }
+
     Move getBestMove(){
+        iterations++;
         return {-1,-1};
     }
 private:
     int evaluate(){
         return 1;
     }
+
+    int iterations;
 };
 
 int main()
@@ -291,9 +352,9 @@ int main()
         // gs.display();
         // cout << "\n";
 
-        if (gs.isXTurn())
+        if (!gs.isXTurn())
         {
-            cout << "X to Move\n";
+            cout << "O to Move\n";
             vector<vector<char> > board = gs.getBoard();
             bool turn = gs.isXTurn();
             Move m = mm.getBestMove(board, turn);
@@ -302,7 +363,7 @@ int main()
         }
         else
         {
-            cout << "O to Move (Format: row col)\n";
+            cout << "X to Move (Format: row col)\n";
             int r, c;
             cin >> r >> c;
             gs.move(r, c);
