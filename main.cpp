@@ -251,63 +251,30 @@ private:
     int iterations;
 };
 
-class Node {
+class Node{
 public:
-    Node(vector<vector<char> > board){
-        this->board = board;
-        if((check(board) == 'x') || (check(board) == 'o') || (check(board) == 'd')){
+    Node(vector<vector<char> > boardState, shared_ptr<Node> p){
+        board = boardState;
+        if(check(board) != '-'){
             terminal = true;
         } else {
             terminal = false;
         }
+
+        parent = p;
+
         visits = 0;
+
         score = 0;
     }
 
-    bool isTerminal(){
-        return terminal;
-    }
-
-    vector<vector<char> > getBoard(){
-        return board;
-    }
-
-    int getScore(){
-        return score;
-    }
-
-    int getVisits(){
-        return visits;
-    }
-
-    void setScore(int newScore){
-        score = newScore;
-    }
-
-    void setVisits(int newVisits){
-        visits = newVisits;
-    }
-
 private:
-    bool terminal;
     vector<vector<char> > board;
+    bool terminal;
+    shared_ptr<Node> parent;
     int visits, score;
-}
-
-class GameTree {
-public:
-    GameTree(){
-
-    }
-
-    void addChildren(Node& parent, list<Node>& children){
-        adjList.insert({parent, children});
-    }
-
-
-private:
-    map<Node, list<Node>> adjList;
-}
+    unordered_map<string, shared_ptr<Node>> children;
+};
 
 class MonteCarlo{
 public:
