@@ -251,46 +251,85 @@ private:
     int iterations;
 };
 
-class Node{
-public:
-    Node(vector<vector<char> > boardState, shared_ptr<Node> p){
-        board = boardState;
-        if(check(board) != '-'){
-            terminal = true;
-        } else {
-            terminal = false;
-        }
-
-        parent = p;
-
-        visits = 0;
-
-        score = 0;
-    }
-
-private:
-    vector<vector<char> > board;
-    bool terminal;
-    shared_ptr<Node> parent;
-    int visits, score;
-    unordered_map<string, shared_ptr<Node>> children;
-};
-
 class MonteCarlo{
 public:
     MonteCarlo(){
         iterations = 0;
     }
 
-    Move getBestMove(){
-        iterations++;
-        return {-1,-1};
+    Move getBestMove(vector<vector<char> > &board, bool player){
+        unordered_map<int, int> evaluations; // Keeps track of Move evaluations
+        // Generate All Possible Moves
+        for(int row = 0; row < 3; row++){
+            for(int col = 0; col < 3; col++){
+                int score = 9;
+                vector<Move> moves;
+                if(board[row][col] == '-'){
+                    // Randomly Simulate Game Until a player loses
+                    for(int i = 0; i < 200; i++){
+                        printf("Simulation: %d\n", i + 1);
+                        vector<vector<char> > boardCopy = board;
+                        bool copyPlayer = player;
+                        Move firstMove;
+                        bool firstIteration = true;
+                        while(check(boardCopy) == '-'){
+                            for(int row = 0; row < 3; row++){
+                                for(int col = 0; col < 3; col++){
+                                    if(boardCopy[row][col] == '-'){
+                                        moves.push_back({row, col});
+                                        printf("%d %d, ", row, col);
+                                    }
+                                }
+                            }
+                            printf("\n");
+                            time_t nTime;
+                            srand((unsigned) time(&nTime));
+                            Move randomMove = moves[rand()%moves.size()];
+                            // printf("%d \t%d\n", randomMove.row, randomMove.col);
+                            if(firstIteration)
+                                firstMove = randomMove;
+                            if(player){
+                                boardCopy[randomMove.row][randomMove.col] = 'x';
+                            } else {
+                                boardCopy[randomMove.row][randomMove.col] = 'o';
+                            }
+                            copyPlayer = !copyPlayer;
+                            score -= 1;
+                            firstIteration = false;
+                        }
+                        int moveRepresentation = 3*firstMove.row + firstMove.col;
+                        if(evaluations.find(moveRepresentation) == evaluations.end()){
+                            evaluations[moveRepresentation] = score;
+                        } else {
+                            evaluations[moveRepresentation] += score;
+                        }
+                    }
+                }
+            }
+        }
+
+        Move bestMove;
+        int best, r, c;
+        int bestScore = 0;
+        int score;
+        auto iter = evaluations.begin();
+        while(iter != evaluations.end()){
+            score = iter->second;
+            if(player){
+                bestScore = max(bestScore, score);
+                if(bestScore == score)
+                    best = iter->first;
+            } else {
+                bestScore = min(bestScore, score);
+                if(bestScore == score)
+                    best = iter->first;
+            }
+        }
+        c = best % 3;
+        r = (best - c) / 3;
+        return {r, c};
     }
 private:
-    int evaluate(){
-        return 1;
-    }
-
     int iterations;
 };
 
@@ -303,28 +342,14 @@ int main()
 
     while (!gs.isDone())
     {
-        // if (gs.isXTurn())
-        // {
-        //     cout << "X to ";
-        // }
-        // else
-        // {
-        //     cout << "O to ";
-        // }
-
-        // cout << "Move (Format: row col)\n";
-        // int r, c;
-        // cin >> r >> c;
-        // gs.move(r, c);
-        // gs.display();
-        // cout << "\n";
-
         if (!gs.isXTurn())
         {
             cout << "O to Move\n";
             vector<vector<char> > board = gs.getBoard();
             bool turn = gs.isXTurn();
-            Move m = mm.getBestMove(board, turn);
+            // Move m = mm.getBestMove(board, turn);
+            // gs.move(m.row, m.col);
+            Move m = mc.getBestMove(board, turn);
             gs.move(m.row, m.col);
             cout << mm.getIterations() << " iterations checked\n";
         }
@@ -335,17 +360,6 @@ int main()
             cin >> r >> c;
             gs.move(r, c);
         }
-
-        // if(gs.isXTurn()){
-        //     cout << "X to Move\n";
-        // } else {
-        //     cout << "O to Move\n";
-        // }
-
-        // vector<vector<char> > board = gs.getBoard();
-        // bool turn = gs.isXTurn();
-        // Move m = bestMove(board, turn);
-        // gs.move(m.row, m.col);
 
         gs.display();
     }
