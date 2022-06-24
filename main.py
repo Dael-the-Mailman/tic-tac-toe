@@ -7,8 +7,8 @@ from copy import deepcopy
 
 class Board():
     def __init__(self, board=None):
-        self.player_1 = 'o'
-        self.player_2 = 'x'
+        self.player_1 = 'x'
+        self.player_2 = 'o'
         self.empty_square = '.'
 
         self.position = {}
@@ -24,7 +24,7 @@ class Board():
                 self.position[row, col] = self.empty_square
 
     def make_move(self, row, col):
-        board = Board()
+        board = Board(self)
         board.position[row, col] = self.player_1
 
         (board.player_1, board.player_2) = (board.player_2, board.player_1) 
@@ -75,6 +75,15 @@ class Board():
                 return True
 
         return False
+    
+    def generate_states(self):
+        actions = []
+        for row in range(3):
+            for col in range(3):
+                if self.position[row, col] == self.empty_square:
+                    actions.append(self.make_move(row, col))
+        
+        return actions
 
     def __str__(self):
         board_string = ''
@@ -94,16 +103,12 @@ class Board():
 
 if __name__ == '__main__':
     board = Board()
+    print(board)
 
-    board.position = {
-        (0,0): 'x', (0,1): '.', (0,2): 'o', 
-        (1,0): 'o', (1,1): 'x', (1,2): 'x', 
-        (2,0): 'x', (2,1): 'o', (2,2): 'x', 
-    }
+    actions = board.generate_states()
+    board = actions[0]
+    print(board)
 
-    if board.is_win():
-        print('Win status:', board.is_win())
-    else:
-        print('Draw status:', board.is_draw())
-
+    actions = board.generate_states()
+    board = actions[0]
     print(board)
