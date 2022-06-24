@@ -7,8 +7,8 @@ from copy import deepcopy
 
 class Board():
     def __init__(self, board=None):
-        self.player_1 = 'x'
-        self.player_2 = 'o'
+        self.player_1 = 'o'
+        self.player_2 = 'x'
         self.empty_square = '.'
 
         self.position = {}
@@ -31,6 +31,51 @@ class Board():
 
         return board
 
+    def is_draw(self):
+        for row, col in self.position:
+            if self.position[row, col] == self.empty_square:
+                return False
+        return True
+
+    def is_win(self):
+        for col in range(3):
+            winning_sequence = []
+            for row in range(3):
+                if self.position[row, col] == self.player_2:
+                    winning_sequence.append((row, col))
+                
+                if len(winning_sequence) == 3:
+                    return True
+        
+        for row in range(3):
+            winning_sequence = []
+            for col in range(3):
+                if self.position[row, col] == self.player_2:
+                    winning_sequence.append((row, col))
+                
+                if len(winning_sequence) == 3:
+                    return True
+        
+        winning_sequence = []
+        for row in range(3):
+            col = row
+            if self.position[row, col] == self.player_2:
+                winning_sequence.append((row, col))
+            
+            if len(winning_sequence) == 3:
+                return True
+        
+        winning_sequence = []
+        for row in range(3):
+            col = 3 - row - 1
+            if self.position[row, col] == self.player_2:
+                winning_sequence.append((row, col))
+            
+            if len(winning_sequence) == 3:
+                return True
+
+        return False
+
     def __str__(self):
         board_string = ''
 
@@ -50,10 +95,15 @@ class Board():
 if __name__ == '__main__':
     board = Board()
 
+    board.position = {
+        (0,0): 'x', (0,1): '.', (0,2): 'o', 
+        (1,0): 'o', (1,1): 'x', (1,2): 'x', 
+        (2,0): 'x', (2,1): 'o', (2,2): 'x', 
+    }
+
+    if board.is_win():
+        print('Win status:', board.is_win())
+    else:
+        print('Draw status:', board.is_draw())
+
     print(board)
-
-    board = board.make_move(0,0)
-
-    board_1 = Board(board)
-
-    print(board_1)
