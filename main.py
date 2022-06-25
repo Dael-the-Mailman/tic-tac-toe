@@ -84,6 +84,41 @@ class Board():
                     actions.append(self.make_move(row, col))
         
         return actions
+    
+    def game_loop(self):
+        print(self)
+
+        while True:
+            user_input = input('> ')
+
+            if user_input == 'exit':
+                break
+
+            if user_input == '':
+                continue
+            
+            try:
+                row = int(user_input.split(' ')[0])
+                col = int(user_input.split(' ')[-1])
+
+                if self.position[row, col] != self.empty_square:
+                    print("Illegal move")
+                    continue
+
+                
+                self = self.make_move(row, col)
+                print(self)
+
+                if self.is_win():
+                    print('Player "%s" has won the game!' % self.player_2)
+                    break
+                elif self.is_draw():
+                    print("Draw!")
+                    break
+
+            except Exception as e:
+                print("Error:", e)
+                print("Illegal move")
 
     def __str__(self):
         board_string = ''
@@ -103,12 +138,4 @@ class Board():
 
 if __name__ == '__main__':
     board = Board()
-    print(board)
-
-    actions = board.generate_states()
-    board = actions[0]
-    print(board)
-
-    actions = board.generate_states()
-    board = actions[0]
-    print(board)
+    board.game_loop()
