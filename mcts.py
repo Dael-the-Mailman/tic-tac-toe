@@ -47,5 +47,23 @@ class MCTS():
         pass
 
     def get_best_move(self, node, exploration_constant):
-        pass
+        best_score = float('-inf')
+        best_moves = []
+        
+        for child_node in node.children.values():
+            if child_node.board.player_2 == 'x': current_player = 1
+            elif child_node.board.player_2 == 'o': current_player = -1
+            
+            move_score = current_player * child_node.score / child_node.visits + \
+                         exploration_constant * math.sqrt(math.log(node.visits / child_node.visits))
+
+            if move_score > best_score:
+                best_score = move_score
+                best_moves = [child_node]
+            
+            elif move_score == best_score:
+                best_moves.append(child_node)
+            
+        return random.choice(best_moves)
+
 
