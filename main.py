@@ -4,6 +4,7 @@ Derived from Code Monkey King
 https://www.youtube.com/playlist?list=PLLfIBXQeu3aanwI5pYz6QyzYtnBEgcsZ8
 '''
 from copy import deepcopy
+from mcts import *
 
 class Board():
     def __init__(self, board=None):
