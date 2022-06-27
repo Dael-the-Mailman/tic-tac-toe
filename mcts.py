@@ -38,13 +38,50 @@ class MCTS():
             pass
 
     def select(self, node):
-        pass
+        while not node.is_terminal:
+            if node.is_fully_expanded:
+                node = self.get_best_move(node, 2)
+            
+            else:
+                return self.expand(node)
+        
+        return node
+
+    def expand(self, node):
+        states = node.board.generate_states()
+
+        for state in states:
+            if str(state.position) not in node.children:
+                new_node = TreeNode(state, node)
+
+                node.children[str(state.position)] = new_node
+
+                if len(states) == len(node.children):
+                    node.is_fully_expanded = True
+
+                return new_node
+
+        print("Error has occured")
+            
 
     def rollout(self, board):
-        pass
+        while not board.is_win():
+            try:
+                board = random.choice(board.generate_states())
+
+            except:
+                return 0
+        
+        if board.player_2 == 'x': return 1
+        elif board.player_2 == 'o': return -1
 
     def backpropagate(self, node, score):
-        pass
+        while node is not None:
+            node.visits += 1
+
+            node.score += score
+
+            node = node.parent
 
     def get_best_move(self, node, exploration_constant):
         best_score = float('-inf')

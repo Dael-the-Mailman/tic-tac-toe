@@ -89,6 +89,8 @@ class Board():
     def game_loop(self):
         print(self)
 
+        mcts = MCTS()
+
         while True:
             user_input = input('> ')
 
@@ -108,6 +110,13 @@ class Board():
 
                 
                 self = self.make_move(row, col)
+
+                best_move = mcts.search(self)
+                try:
+                    self = best_move.board
+                except:
+                    pass
+
                 print(self)
 
                 if self.is_win():
