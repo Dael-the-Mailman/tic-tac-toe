@@ -44,7 +44,13 @@ public:
     }
 
     bool isDraw(){
-        return false;
+        for(auto &row: this->position){
+            for(auto &square: row){
+                if(square == this->empty_square)
+                    return false;
+            }
+        }
+        return true;
     }
 
     bool isWin(){
@@ -79,14 +85,19 @@ public:
 int main(){
     Board board;
 
+    board.position[0][0] = 'o';
+    board.position[0][1] = 'x';
+    board.position[0][2] = 'x';
+    board.position[1][0] = 'o';
+    board.position[1][1] = 'x';
+    board.position[1][2] = 'x';
+    board.position[2][0] = 'o';
+    board.position[2][1] = 'x';
+    board.position[2][2] = 'x';
+
     board.printBoard();
 
-    board = board.makeMove(1, 1);
 
-    board.printBoard();
-
-    board = board.makeMove(1, 2);
-
-    board.printBoard();
+    std::cout << board.isDraw() << "\n";
     return 0;
 }
