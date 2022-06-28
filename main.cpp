@@ -31,8 +31,16 @@ public:
 
     }
 
-    Vec2D makeMove(int row, int col){
-        return Vec2D();
+    Board makeMove(int row, int col){
+        Board tmpBoard(*this);
+        tmpBoard.position[row][col] = this->player_1;
+
+        // Bit manipulation magic
+        tmpBoard.player_1 ^= tmpBoard.player_2;
+        tmpBoard.player_2 = tmpBoard.player_1 ^ tmpBoard.player_2;
+        tmpBoard.player_1 ^= tmpBoard.player_2;
+
+        return tmpBoard;
     }
 
     bool isDraw(){
@@ -55,8 +63,8 @@ public:
         std::string out = "";
         if(this->player_1 == 'x'){
             std::cout << "\n-------------\n\"x\" to move:\n-------------\n\n";
-        } else if(this->player_2 == 'o'){
-            std::cout << "\n-------------\n\"x\" to move:\n-------------\n\n";
+        } else if(this->player_1 == 'o'){
+            std::cout << "\n-------------\n\"o\" to move:\n-------------\n\n";
         }
 
         for (int row = 0; row < 3; row++){
@@ -73,10 +81,12 @@ int main(){
 
     board.printBoard();
 
-    board.position[1][1] = 'x';
+    board = board.makeMove(1, 1);
 
-    Board board1(board);
+    board.printBoard();
 
-    board1.printBoard();
+    board = board.makeMove(1, 2);
+
+    board.printBoard();
     return 0;
 }
