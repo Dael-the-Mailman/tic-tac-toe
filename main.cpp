@@ -24,7 +24,10 @@ public:
         this->position = Vec2D(3, Vec1D(3, '.'));
     }
 
-    Board(const Board& board){
+    Board(const Board& board):
+        player_1(board.player_1),
+        player_2(board.player_2),
+        position(board.position){
 
     }
 
