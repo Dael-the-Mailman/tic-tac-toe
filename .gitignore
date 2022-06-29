@@ -1,2 +1,6 @@
 *.exe
+<<<<<<< HEAD
+=======
+/__pycache__
+>>>>>>> refactor
 /.vscode
