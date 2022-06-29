@@ -31,6 +31,7 @@ public:
 
     }
 
+    // Returns board object
     Board makeMove(int row, int col){
         Board tmpBoard(*this);
         tmpBoard.position[row][col] = this->player_1;
@@ -43,6 +44,7 @@ public:
         return tmpBoard;
     }
 
+    // Checks to see if state is drawn
     bool isDraw(){
         for(auto &row: this->position){
             for(auto &square: row){
@@ -53,6 +55,7 @@ public:
         return true;
     }
 
+    // Checks to see if player 2 has won
     bool isWin(){
         for(int i = 0; i < 3; i++){
             if ((this->position[0][i] == this->player_2) &&
@@ -79,6 +82,8 @@ public:
         return diag_1 || diag_2;
     }
 
+
+    // Generates all possible board states from current state
     std::vector<Board> generateStates(){
         std::vector<Board> actions;
         for(int row = 0; row < 3; row++){
@@ -92,10 +97,42 @@ public:
         return actions;
     }
 
+    // Runs the game loop
     void gameLoop(){
+        this->printBoard();
 
+        while(true){
+            int row, col;
+            std::cout << "> ";
+            std::cin >> row >> col;
+            std::cout << "\n";
+
+            try{
+                if(this->position[row][col] != this->empty_square){
+                    std::cout << "Illegal move\n";
+                    continue;
+                }
+
+                *this = this->makeMove(row, col);
+                
+                this->printBoard();
+
+                if (this->isWin()){
+                    printf("Player \"%c\" has won the game!", this->player_2);
+                    break;
+                } else if (this->isDraw()){
+                    printf("Draw!");
+                    break;
+                }
+
+            } catch (std::exception& e){
+                std::cout << "Error: " << e.what() << "\nIllegal move\n";
+                continue;
+            }
+        }
     }
 
+    // Prints the board to command line
     void printBoard(){
         std::string out = "";
         if(this->player_1 == 'x'){
@@ -115,17 +152,8 @@ public:
 
 int main(){
     Board board;
+    board.gameLoop();
+    // board.printBoard();
 
-    board = board.makeMove(1,1);
-
-    board.printBoard();
-
-    auto actions = board.generateStates();
-
-    for(auto action : actions){
-        action.printBoard();
-    }
-
-    std::cout << board.player_2 << "\t" << board.isWin() << "\n";
     return 0;
 }
