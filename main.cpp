@@ -4,13 +4,13 @@ using Vec2D = std::vector<std::vector<char>>;
 using Vec1D = std::vector<char>;
 using Move = std::pair<int,int>;
 
-// class TreeNode{
+class TreeNode{
 
-// };
+};
 
-// class MCTS{
+class MCTS{
 
-// };
+};
 
 class Board{
 public:
