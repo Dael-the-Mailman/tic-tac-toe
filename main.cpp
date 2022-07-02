@@ -4,14 +4,6 @@ using Vec2D = std::vector<std::vector<char>>;
 using Vec1D = std::vector<char>;
 using Move = std::pair<int,int>;
 
-class TreeNode{
-
-};
-
-class MCTS{
-
-};
-
 class Board{
 public:
     char player_1 = 'x';
@@ -127,7 +119,7 @@ public:
 
             } catch (std::exception& e){
                 std::cout << "Error: " << e.what() << "\nIllegal move\n";
-                continue;
+                break;
             }
         }
     }
@@ -148,6 +140,58 @@ public:
             std::cout << "\n";
         }
     }
+};
+
+class TreeNode{
+public:
+    int visits = 0, score = 0;
+    Board board;
+    bool isTerminal, isFullyExpanded;
+    TreeNode parent;
+    std::unordered_map<int, int> children;
+
+    TreeNode(Board board, TreeNode parent){
+        if (board.isWin() || board.isDraw()){
+            this->isTerminal = true;
+        } else {
+            this->isTerminal = false;
+        }
+
+        this->isFullyExpanded = this->isTerminal;
+
+        this->parent = parent;
+    }
+};
+
+class MCTS{
+    MCTS(){
+
+    }
+
+    Board search(Board initial_state){
+
+    }
+
+    TreeNode expand(TreeNode node){
+
+    }
+
+    TreeNode expand(TreeNode node){
+
+    }
+
+    int rollout(Board board){
+
+    }
+
+    void backpropagate(TreeNode node, int score){
+
+    }
+
+    TreeNode getBestMove(TreeNode node, double exploration_constant){
+        
+    } 
+
 };
 
 int main(){
