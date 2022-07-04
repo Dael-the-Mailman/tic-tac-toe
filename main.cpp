@@ -150,7 +150,7 @@ public:
     TreeNode parent;
     std::unordered_map<int, int> children;
 
-    TreeNode(Board board, TreeNode parent){
+    TreeNode(Board board, TreeNode& parent){
         if (board.isWin() || board.isDraw()){
             this->isTerminal = true;
         } else {
@@ -164,33 +164,74 @@ public:
 };
 
 class MCTS{
+public:
+    TreeNode root;
+
     MCTS(){
 
     }
 
     Board search(Board initial_state){
+        this->root = TreeNode(initial_state, NULL);
 
+        for(int i = 0; i < 1000; i++){
+            TreeNode node = this->select(this->root);
+            int score = this->rollout(node.board);
+        }
+
+        try{
+            return this->getBestMove(this->root, 0);
+        } catch (std::exception& e){
+            std::cout << e.what() << "\n";
+        }
     }
 
-    TreeNode expand(TreeNode node){
+    TreeNode select(TreeNode& node){
+        while(!node.isTerminal){
+            if (node.isFullyExpanded){
+                node = this->getBestMove(node, 2);
+            } else {
+                return this->expand(node);
+            }
+        }
 
+        return node;
     }
 
-    TreeNode expand(TreeNode node){
-
+    TreeNode expand(TreeNode& node){
+        std::vector<Board> states = node.board.generateStates();
+        
+        for(Board state : states){
+            // Find if value exists in children map
+        }
     }
 
     int rollout(Board board){
-
+        while(!board.isWin()){
+            // Select random move
+        }
     }
 
-    void backpropagate(TreeNode node, int score){
-
+    void backpropagate(TreeNode& node, int score){
+        while(node){
+            node.visits += 1;
+            node.score += score;
+            node = node.parent
+        }
     }
 
-    TreeNode getBestMove(TreeNode node, double exploration_constant){
-        
-    } 
+    TreeNode getBestMove(TreeNode& node, double exploration_constant){
+        double best_score = std::numeric_limits<double>::min();
+        std::vector<Board> best_moves;
+
+        // Run a for loop for every value in the children map
+    }
+
+    int encodePosition(int row, int col){
+        return 3 * row + col;
+    }
+
+private:
 
 };
 
