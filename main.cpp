@@ -148,7 +148,7 @@ public:
     Board board;
     bool isTerminal, isFullyExpanded;
     std::shared_ptr<TreeNode> parent;
-    std::unordered_map<int, int> children;
+    std::unordered_map<std::string, TreeNode> children;
 
     TreeNode(Board board){
         if (board.isWin() || board.isDraw()){
@@ -181,7 +181,7 @@ public:
 
     }
 
-    Board search(Board initial_state){
+    TreeNode search(Board initial_state){
         this->root = TreeNode(initial_state);
 
         for(int i = 0; i < 1000; i++){
@@ -200,27 +200,108 @@ public:
     }
 
     TreeNode select(TreeNode node){
-        
+        while(!node.isTerminal){
+            if(node.isFullyExpanded){
+                node = this->getBestMove(node, 2);
+            } else {
+                return self.expand(node);
+            }
+        }
+
+        return node;
     }
 
-    TreeNode expand(TreeNode& node){
-        
+    TreeNode expand(TreeNode node){
+        std::vector<Board> states = node.board.generateStates();
+
+        for(Board state : states){
+            std::string encoded = this->encodePosition(state);
+            if (node.children.find(encoded) != node.children.end()){
+                TreeNode new_node = TreeNode(state, node);
+
+                node.children[encoded] = new_node;
+
+                if (states.size() == node.children.size()){
+                    node.isFullyExpanded = true;
+                }
+
+                return new_node;
+            }
+        }
+
+        cout << "Error has occured\n";
     }
 
     int rollout(Board board){
-        
+        while(!board.isWin()){
+            try{
+                std::srand(std::time(0));
+                std::vector<Board> states = board.generateStates();
+                int random_pos = std::rand() % states.size();
+
+                board = states[random_pos];
+            } catch {
+                return 0;
+            }
+        }
+
+        if (board.player_2 == 'x'){
+            return 1;
+        } else if (board.player_2 == 'o'){
+            return -1;
+        }
     }
 
     void backpropagate(TreeNode node, int score){
-        
+        while(node){
+            node.visits++;
+            node.score += score;
+            node = node.parent;
+        }
     }
 
     TreeNode getBestMove(TreeNode node, double exploration_constant){
+        double best_score = std::numeric_limits<double>::min(), move_score;
+        std::vector<TreeNode> best_moves;
+        int current_player;
         
+
+        for(auto iter = node.children.begin(); iter != node.children.begin(); iter++){
+            TreeNode child_node = iter->second;
+
+            if(child_node.board.player_2 == 'x'){
+                current_player = 1;
+            } else if(child_node.board.player_2 == 'o'){
+                current_player = -1;
+            }
+
+            move_score = current_player * child_node.score / child_node.visits + 
+                         exploration_constant * std::sqrt(std::log(node.visits / child_node.visits));
+            
+            if move_score > best_score{
+                best_score = move_score;
+                best_moves.clear();
+                best_moves.push_back(child_node);
+            } else if (move_score == best_score){
+                best_moves.push_back(child_node);
+            }
+        }
+
+        std::srand(std::time(0));
+        std::vector<Board> states = board.generateStates();
+        int random_pos = std::rand() % states.size();
+
+        return best_moves[random_pos];
     }
 
-    int encodePosition(int row, int col){
-        return 3 * row + col;
+    std::string encodePosition(Board board){
+        std::string out = "";
+        for(int row = 0; row < 3; row++){
+            for(int col = 0; col < 3; col++){
+                out += board.position[row][col];
+            }
+        }
+        return out;
     }
 
 private:
