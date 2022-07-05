@@ -147,10 +147,20 @@ public:
     int visits = 0, score = 0;
     Board board;
     bool isTerminal, isFullyExpanded;
-    TreeNode parent;
+    std::shared_ptr<TreeNode> parent;
     std::unordered_map<int, int> children;
 
-    TreeNode(Board board, TreeNode& parent){
+    TreeNode(Board board){
+        if (board.isWin() || board.isDraw()){
+            this->isTerminal = true;
+        } else {
+            this->isTerminal = false;
+        }
+
+        this->isFullyExpanded = this->isTerminal;
+    }
+
+    TreeNode(Board board, TreeNode parent){
         if (board.isWin() || board.isDraw()){
             this->isTerminal = true;
         } else {
@@ -172,59 +182,41 @@ public:
     }
 
     Board search(Board initial_state){
-        this->root = TreeNode(initial_state, NULL);
+        this->root = TreeNode(initial_state);
 
         for(int i = 0; i < 1000; i++){
             TreeNode node = this->select(this->root);
+
             int score = this->rollout(node.board);
+
+            this->backpropagate(node, score);
         }
 
-        try{
+        try {
             return this->getBestMove(this->root, 0);
-        } catch (std::exception& e){
-            std::cout << e.what() << "\n";
+        } catch (const std::exception& e){
+            cout << e.what() << '\n';
         }
     }
 
-    TreeNode select(TreeNode& node){
-        while(!node.isTerminal){
-            if (node.isFullyExpanded){
-                node = this->getBestMove(node, 2);
-            } else {
-                return this->expand(node);
-            }
-        }
-
-        return node;
+    TreeNode select(TreeNode node){
+        
     }
 
     TreeNode expand(TreeNode& node){
-        std::vector<Board> states = node.board.generateStates();
         
-        for(Board state : states){
-            // Find if value exists in children map
-        }
     }
 
     int rollout(Board board){
-        while(!board.isWin()){
-            // Select random move
-        }
+        
     }
 
-    void backpropagate(TreeNode& node, int score){
-        while(node){
-            node.visits += 1;
-            node.score += score;
-            node = node.parent
-        }
+    void backpropagate(TreeNode node, int score){
+        
     }
 
-    TreeNode getBestMove(TreeNode& node, double exploration_constant){
-        double best_score = std::numeric_limits<double>::min();
-        std::vector<Board> best_moves;
-
-        // Run a for loop for every value in the children map
+    TreeNode getBestMove(TreeNode node, double exploration_constant){
+        
     }
 
     int encodePosition(int row, int col){
